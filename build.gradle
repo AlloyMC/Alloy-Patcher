@@ -1,4 +1,7 @@
 plugins {
+	id 'application'
+	id 'eclipse'
+	id 'idea'
 	id 'maven-publish'
 }
 
@@ -12,6 +15,21 @@ archivesBaseName = project.archives_base_name
 version = project.version
 group = project.maven_group
 
+dependencies {
+	// asm
+	implementation 'org.ow2.asm:asm:7.1'
+	implementation 'org.ow2.asm:asm-analysis:7.1'
+	implementation 'org.ow2.asm:asm-commons:7.1'
+	implementation 'org.ow2.asm:asm-tree:7.1'
+	implementation 'org.ow2.asm:asm-util:7.1'
+	
+	// remapping
+	implementation 'net.fabricmc:tiny-remapper:0.2.1.62'
+
+	// forge and fabric metadata conversion
+	implementation 'com.electronwill.night-config:toml:3.6.0'
+	implementation 'com.google.code.gson:gson:2.8.5'
+}
 // ensure that the encoding is set to UTF-8, no matter what the system default is
 // this fixes some edge cases with special characters not displaying correctly
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
