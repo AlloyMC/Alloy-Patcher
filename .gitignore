@@ -11,3 +11,5 @@ bin/
 .settings/
 .classpath
 .project
+log_latest.txt
+*.txt.gz
