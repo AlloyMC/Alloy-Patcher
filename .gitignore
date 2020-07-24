@@ -13,3 +13,5 @@ bin/
 .project
 log_latest.txt
 *.txt.gz
+input/
+output/
