@@ -10,7 +10,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.zip.GZIPOutputStream;
 
-public final class Logger {
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
+
+public final class Logger extends SwingWorker<T, V> {
 	public Logger(String name) {
 		this.name = name;
 	}
@@ -21,12 +24,14 @@ public final class Logger {
 		String formattedMessage = "[" + this.name + "/INFO] @" + FORMAT.format(LocalDateTime.now()) + " " + message;
 		WRITER.ifPresent(pw -> pw.println(formattedMessage));
 		System.out.println(formattedMessage);
+		SwingUtilities.invokeLater(Main::refresh);
 	}
 
 	public void warn(String message) {
 		String formattedMessage = "[" + this.name + " /WARN] @" + FORMAT.format(LocalDateTime.now()) + " " + message;
 		WRITER.ifPresent(pw -> pw.println(formattedMessage));
 		System.out.println(formattedMessage);
+		SwingUtilities.invokeLater(Main::refresh);
 	}
 
 	private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");

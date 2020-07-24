@@ -31,7 +31,7 @@ public class Main {
 
 		JPanel panel = new JPanel(new BorderLayout(5, 10));
 
-		JTextArea log = new JTextArea();
+		log = new JTextArea();
 		log.setEditable(false);
 		log.setBorder(new BevelBorder(BevelBorder.LOWERED));
 
@@ -66,8 +66,13 @@ public class Main {
 		frame.setVisible(true);
 	}
 
+	public static void refresh() {
+		log.updateUI();
+	}
+
 	private static final Patcher PATCHER = new Patcher();
 	private static final Logger LOGGER = new Logger("Main");
+	private static JTextArea log;
 
 	static class OutRedirect extends PrintStream {
 		OutRedirect(JTextArea log) {

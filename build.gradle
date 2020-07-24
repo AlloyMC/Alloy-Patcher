@@ -34,10 +34,11 @@ dependencies {
 	implementation 'org.ow2.asm:asm-util:7.1'
 	
 	// remapping
-	//implementation 'net.fabricmc:tiny-remapper:0.2.1.62'
+	implementation 'net.fabricmc:tiny-mappings-parser:0.3.0+build.17'
 	implementation 'org.cadixdev:lorenz:0.5.2'
 	implementation 'org.cadixdev:atlas:0.2.0'
 	implementation 'org.cadixdev:lorenz-asm:0.5.2'
+	implementation 'net.fabricmc:lorenz-tiny:2.0.0+build.2'
 
 	// forge and fabric metadata conversion
 	implementation 'com.electronwill.night-config:toml:3.6.0'

@@ -2,10 +2,15 @@ package io.github.alloymc.patcher;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+
+import org.cadixdev.atlas.Atlas;
+import org.cadixdev.bombe.asm.jar.JarEntryRemappingTransformer;
+import org.cadixdev.lorenz.asm.LorenzRemapper;
 
 public class Patcher implements Runnable {
 	private static Boolean running = false;
@@ -17,6 +22,7 @@ public class Patcher implements Runnable {
 				LOGGER.log("Already Runnning!");
 				return;
 			} else {
+				LOGGER.log("Remapping Jars!");
 				running = true;
 			}
 		}
@@ -29,11 +35,19 @@ public class Patcher implements Runnable {
 			File tempOutputDir = new File("output/temp");
 			tempOutputDir.mkdirs();
 
+			LOGGER.log("Searching for mod jars...");
+
 			for (File modJar : modJars) {
-				try {
-					this.patchJar(this.remapJar(modJar, tempOutputDir), outputDir);
-				} catch (IOException e) {
-					e.printStackTrace();
+				String name = modJar.getName();
+
+				if (name.endsWith(".jar")) {
+					LOGGER.log("Discovered mod jar: " + name);
+
+					try {
+						this.patchJar(this.remapJar(modJar, name, tempOutputDir), name, outputDir);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		} else {
@@ -45,14 +59,26 @@ public class Patcher implements Runnable {
 		}
 	}
 
-	private File remapJar(File modJar, File outputDir) {
+	private File remapJar(File modJar, String name, File outputDir) throws IOException {
+		LOGGER.log("Remapping Mod Jar: " + name);
+
 		final Atlas atlas = new Atlas();
-		
+		atlas.install(ctx -> new JarEntryRemappingTransformer(
+				new LorenzRemapper(Mappings.mappingsConversion, ctx.inheritanceProvider())));
+
+		File result = new File(outputDir, "remapped_" + modJar.getName());
+		long t = System.currentTimeMillis();
+		atlas.run(Paths.get(modJar.toURI()), Paths.get(result.toURI()));
+		LOGGER.log("Remapping took " + (System.currentTimeMillis() - t) + "ms");
+		atlas.close();
+		return result;
 	}
 
-	private void patchJar(File modJar, File outputDir) throws ZipException, IOException {
-		ZipFile zipFile = new ZipFile(modJar);
-		Enumeration<? extends ZipEntry> lexManos = zipFile.entries();
+	private void patchJar(File modJar, String name, File outputDir) throws ZipException, IOException {
+		LOGGER.log("Patching Mod Jar: " + name);
+
+		ZipFile jarIn = new ZipFile(modJar);
+		Enumeration<? extends ZipEntry> lexManos = jarIn.entries();
 
 		while (lexManos.hasMoreElements()) {
 			ZipEntry cpw = lexManos.nextElement(); // I got bored naming vars ok
@@ -65,6 +91,8 @@ public class Patcher implements Runnable {
 				}
 			}
 		}
+
+		jarIn.close();
 	}
 
 	private static final Logger LOGGER = new Logger("Patcher");
