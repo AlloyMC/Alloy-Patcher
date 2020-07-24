@@ -31,6 +31,7 @@ public final class Logger {
 
 	private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 	private static final DateTimeFormatter FORMAT_FILENAME = DateTimeFormatter.ofPattern("dd.MM.yyyy HH.mm.ss");
+	private static final File LOG_CACHE_DIR = new File("logs");
 	private static final File LOG_FILE = new File("./log_latest.txt");
 	private static Optional<PrintWriter> WRITER = Optional.empty();
 
@@ -43,7 +44,8 @@ public final class Logger {
 		WRITER.get().close();
 
 		try (FileInputStream fis = new FileInputStream(LOG_FILE)) {
-			File file = new File("./log_" + FORMAT_FILENAME.format(LocalDateTime.now()) + ".txt.gz");
+			LOG_CACHE_DIR.mkdir();
+			File file = new File("./logs/log_" + FORMAT_FILENAME.format(LocalDateTime.now()) + ".txt.gz");
 			file.createNewFile();
 
 			try (GZIPOutputStream fos = new GZIPOutputStream(new FileOutputStream(file))) {

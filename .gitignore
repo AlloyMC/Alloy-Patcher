@@ -12,6 +12,6 @@ bin/
 .classpath
 .project
 log_latest.txt
-*.txt.gz
+logs/
 input/
 output/
