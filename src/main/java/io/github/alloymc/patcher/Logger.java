@@ -11,9 +11,8 @@ import java.util.Optional;
 import java.util.zip.GZIPOutputStream;
 
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
 
-public final class Logger extends SwingWorker<T, V> {
+public final class Logger {
 	public Logger(String name) {
 		this.name = name;
 	}
@@ -24,14 +23,14 @@ public final class Logger extends SwingWorker<T, V> {
 		String formattedMessage = "[" + this.name + "/INFO] @" + FORMAT.format(LocalDateTime.now()) + " " + message;
 		WRITER.ifPresent(pw -> pw.println(formattedMessage));
 		System.out.println(formattedMessage);
-		SwingUtilities.invokeLater(Main::refresh);
+//		SwingUtilities.invokeLater(Main::refresh);
 	}
 
 	public void warn(String message) {
 		String formattedMessage = "[" + this.name + " /WARN] @" + FORMAT.format(LocalDateTime.now()) + " " + message;
 		WRITER.ifPresent(pw -> pw.println(formattedMessage));
 		System.out.println(formattedMessage);
-		SwingUtilities.invokeLater(Main::refresh);
+//		SwingUtilities.invokeLater(Main::refresh);
 	}
 
 	private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");

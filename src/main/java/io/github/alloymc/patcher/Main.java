@@ -51,7 +51,7 @@ public class Main {
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
 		JButton patch = new JButton();
-		patch.addActionListener(event -> PATCHER.run());
+		patch.addActionListener(event -> new Patcher().execute());
 		patch.setText("Patch");
 
 		panel.add(scroll, BorderLayout.CENTER);
@@ -70,7 +70,6 @@ public class Main {
 		log.updateUI();
 	}
 
-	private static final Patcher PATCHER = new Patcher();
 	private static final Logger LOGGER = new Logger("Main");
 	private static JTextArea log;
 
